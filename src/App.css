@@ -1,78 +1,11 @@
-.App {
-  display: flex;
-  margin-top: 10px;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  background-color: #e5e9eb25;
-  /* min-height: 10px; */
-}
-.title {
-  font-weight: bold;
-  font-size: 60px;
-  color: white;
-  margin-bottom: 10px;
-  background-color: blueviolet;
-  width: 100%;
+body {
+  padding: 0%;
+  margin: 0%;
+  background-color: whitesmoke;
 }
 
-.capitalContainer {
+.App{
   display: flex;
   flex-direction: column;
-  margin: 50px;
-  /* background-color: grey; */
-  padding: 30px;
-  width: 300px;
-  border: 2px solid black;
-  color: rgb(214, 14, 14);
-}
-
-.capitalContainer > div {
-  margin-top: 10px;
-  display: flex;
   align-items: center;
-  justify-content: space-around;
-}
-.countryContainer {
-  height: 700px;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  padding: 30px;
-  /* background-color: rgb(85, 224, 166); */
-  border-radius: 30px;
-}
-
-.countryContainer > div {
-  margin: 10px;
-  font-size: 20px;
-}
-
-.countryContainer > div > span {
-  display: inline-block;
-  width: 200px;
-}
-
-.countryContainer >   button {
-  padding: 0.5rem;
-  border: none;
-  /* margin-top: 2rem; */
-  border-radius: 0.5rem;
-}
-
-.countryContainer > div > button:hover {
-  cursor: pointer;
-  background-color: rgb(223, 146, 146);
-}
-
-.countryButton > button {
-  padding: 1rem;
-  border: none;
-  margin-top: 2rem;
-  border-radius: 1rem;
-}
-
-.countryButton > button:hover {
-  cursor: pointer;
-  background-color: rgb(122, 42, 42);
 }

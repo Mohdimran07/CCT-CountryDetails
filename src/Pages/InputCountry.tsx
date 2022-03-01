@@ -1,9 +1,9 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import { Button } from "@material-ui/core";
+import { Box } from "@material-ui/core";
+import React, {ChangeEvent, FormEvent, useState } from "react";
 import { NavigateFunction, useNavigate } from "react-router-dom";
-import useFetchApi from "../hooks/useFetchApi";
-import { Box, Button, ClassNameMap } from "@mui/material";
-
-import { makeStyles } from "@mui/styles";
+import { makeStyles } from "@material-ui/styles";
+import { ClassNameMap } from "@material-ui/core/styles/withStyles";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -12,75 +12,47 @@ const useStyles = makeStyles(() => ({
     alignItems: "center",
     height: "400px",
     width: "400px",
+    // border: "2px solid black"  
   },
   input: {
-    marginTop: "100px",
+    marginTop: "200px",
     padding: "20px",
-    borderRadius: "10px",
-    fontSize: "20px",
+    borderRadius:"10px",
+    fontSize:"25px"
   },
-  button: {
-    marginTop: "20px",
-    borderRadius: "10px",
-    padding: "10px 20px",
-  },
-}));
+ button:{
+  width: "350px",
+  margin: "20px"
+ }
+}))
 
 const InputCountry = (): JSX.Element => {
-  const [countryName, setCountryName] = useState("");
-  const [trigerApi, setTrigetApi] = useState(false);
-  let url = "https://restcountries.com/v3.1/name/";
-  const { data, isLoading, error } = useFetchApi(url, countryName, trigerApi);
-
+  const [countryName, setCountryName] = useState<string>("")
   const navigate: NavigateFunction = useNavigate();
 
-  const handleOnFormSubmit = (e: any): void => {
-    e.preventDefault();
-    setTrigetApi((prev: any) => !prev);
-    console.log("submited");
-  };
-
-  
   const classes: ClassNameMap = useStyles();
-  useEffect(() => {
-    if (data) {
-      navigate("/countryDetails", { state: data?.[0] });
-    }
-  }, [data]);
-  
-  useEffect(() => {
-    console.log(trigerApi);
-  }, [trigerApi]);
-  
-  if (error.type !== 0) {
-    return (
-      <div>
-        {" "}
-        <h4>{error.message}</h4>
-        <Button variant="contained"
-          onClick={() => {
-            window.location.reload();
-          }}
-          >
-          Reload
-        </Button>
-      </div>
-    );
+
+  const changeCountryNameHandler = (e: ChangeEvent<HTMLInputElement>): void => {
+     setCountryName(e.target.value);
+
   }
 
+  const submitFormHandler = (e: FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    navigate(`${countryName}`);
+  }
   return (
-    <Box component="form" className={classes.root} onSubmit={handleOnFormSubmit}>
-    
+    <Box component="form" className={classes.root} onSubmit={submitFormHandler}>
       <input
-        type="text" className={classes.input}
-        placeholder="Enter Country name"
-        onChange={(e: ChangeEvent<HTMLInputElement>) => {
-          setCountryName(e.target.value);
-        }}
+        autoFocus={true}
+        type="text"
+        className={classes.input}
         required
+        value={countryName}
+        placeholder="Enter Country Name"
+        onChange={changeCountryNameHandler}
       ></input>
-      <Button variant="contained" type="submit" className={classes.button} value={isLoading ? "Loadding.." : "Submit"}>Submit</Button>
-    
+      <Button variant="contained" className={classes.button} color={"primary"} type="submit">Submit</Button>
     </Box>
   );
 };

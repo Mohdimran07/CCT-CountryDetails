@@ -1,90 +1,49 @@
-import React, {  useState } from "react";
-import Button from '@mui/material/Button';
-import { useLocation, useNavigate } from "react-router-dom";
-import useFetchApi from "../hooks/useFetchApi";
+import { CircularProgress } from "@mui/material";
+import LinearProgress from "@mui/material/LinearProgress";
+import React, { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import CountryDetailsCard from "../components/CountryDetailsCard";
+import useApiFetch, { useApiFetchType } from "../hooks/useFetchApi";
+import Error from "../utility/Error";
+import { ClassNameMap, makeStyles } from "@mui/styles";
 
-const CountryDetails = () => {
-  const localState: any = useLocation().state;
-   const navigate = useNavigate();
-  //   console.log(localState);
+const useStyles = makeStyles (() => ({
+  loading: {
+    margin: "200px",
+  }
+}))
 
-  const [apiTriger, setApiTriger] = useState<boolean>(false);
-  const [capitalName, setCapitalName] = useState<string>("");
-  const url =
-    "http://api.weatherstack.com/current?access_key=78ae6ba411469f63795fe8974e0e3a45&query=";
-  const { data, isLoading, error } = useFetchApi(url, capitalName, apiTriger);
-  const [isCapitaWeatherVisble, setIsCapitalWeatherSisible] = useState<boolean >(false);
+const CountryDetails = (): JSX.Element => {
+  const countryURL = "https://restcountries.com/v3.1/name/";
+  const countryName: string | undefined = useParams().name;
 
-  const handleOnCapitalButton = () => {
-    if (!data) {
-      setCapitalName(localState?.capital);
-      setApiTriger((prev) => !prev);
-    }
-    setIsCapitalWeatherSisible((prev) => !prev);
-  };
+  const { data, error, isLoading }: useApiFetchType = useApiFetch(
+    countryURL,
+    countryName
+  );
 
- 
+  const classes: ClassNameMap = useStyles();
+  console.log(data)
+
+  // useEffect(() => {
+  //   console.log(data?.[0]);
+  // }, [data]);
 
   return (
     <div>
-    <div className="countryContainer">
-      <div>
-        <span>Country</span>:<span>{localState?.name?.common}</span>
-      </div>
-      <div>
-        <span>Capital</span>:<span>{localState?.capital}</span>
-      </div>
-      <div>
-        <span>Population</span>:<span>{localState?.population}</span>
-      </div>
-      <div>
-        <img src={localState?.flags?.png} alt="flag image"></img>
-      </div>
-      <div>
-        <Button variant="contained" onClick={handleOnCapitalButton}>
-          {isLoading ? "Loadding..." : "capital-weather"}
-        </Button>
-      </div>
-      {isCapitaWeatherVisble && data && (
-        <CapitaWeather capitalName={capitalName} data={data}></CapitaWeather>
+      {error ? (
+        <Error />
+      ) : isLoading ? (
+        <div className={classes.loading}>
+          <CircularProgress color="success" size="90px"></CircularProgress>
+          <br />
+          Loading
+        </div>
+      ) : (
+        <CountryDetailsCard countryData={data?.[0]}></CountryDetailsCard>
       )}
-
-      
-    </div>
-    <div className="countryButton">
-      </div>
-      <Button variant="contained" type="button" onClick={() => navigate("/")}> ← Back</Button>
     </div>
   );
 };
 
 export default CountryDetails;
-
-const CapitaWeather = ({ data, capitalName }: any) => {
-  console.log(capitalName, data);
-
-  return (
-    <div className="capitalContainer">
-      <div>
-        Weather report of :<br></br>
-        <b>{capitalName}</b>
-      </div>
-      <div>
-        <img alt="weather icon" src={data?.current?.weather_icons}></img>
-        <span>
-          Tempratur:{data?.current?.temperature}
-          <sup>0</sup>C
-        </span>
-      </div>
-      <div>
-        <span>Humidity</span> : <span>{data?.current?.humidity}</span>
-      </div>
-      <div>
-        <span> weather_descriptions</span>:<span>{data?.current?.weather_descriptions[0]}</span>
-      </div>
-      <div>
-        <span>weather_code</span> : <span>{data?.current?.weather_code}</span>
-      </div>
-    </div>
-  );
-};
